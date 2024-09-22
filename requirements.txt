@@ -1,0 +1,5 @@
+flask
+flask-socketio
+numpy
+pymongo
+python-dotenv
