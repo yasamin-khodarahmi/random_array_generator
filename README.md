@@ -61,7 +61,7 @@ python app.py
 4. View previously generated arrays using the dropdown menu.
 
 ## Project Structure
-
+```
 real-time-random-array-generator/
 │
 ├── app.py # Main Flask application
@@ -69,6 +69,7 @@ real-time-random-array-generator/
 │ └── index.html # Frontend HTML template
 ├── requirements.txt # Python dependencies
 └── README.md # Project documentation
+```
 
 ## Contact
 
