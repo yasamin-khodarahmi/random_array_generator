@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Random Array Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { background-color: #f0f0f0; border-radius: 5px; padding: 20px; margin-bottom: 20px; }
+        #arrayDisplay { white-space: nowrap; overflow-x: auto; background-color: #e0e0e0; padding: 10px; border-radius: 5px; }
+        .error { color: red; font-weight: bold; }
+        input[type="number"] { width: 100px; }
+    </style>
+</head>
+<body>
+    <h1>Real-Time Random Array Generator</h1>
+    <div class="container">
+        <label for="size">Array Size (min 10000):</label>
+        <input type="number" id="size" min="10000" value="10000">
+        <label for="min">Min Value:</label>
+        <input type="number" id="min" value="0">
+        <label for="max">Max Value:</label>
+        <input type="number" id="max" value="99999">
+        <button onclick="generateArray()">Generate Array</button>
+    </div>
+    <div class="container">
+        <h2>Generated Array (first 100 elements)</h2>
+        <div id="arrayDisplay"></div>
+        <p id="arrayInfo"></p>
+    </div>
+    <div class="container">
+        <h2>Previously Generated Arrays</h2>
+        <select id="arraySelect" onchange="loadArray()">
+            <option value="">Select an array</option>
+        </select>
+    </div>
+    <div id="errorDisplay" class="error"></div>
+
+    <script>
+        const socket = io();
+        
+        socket.on('new_array', (data) => {
+            displayArray(data.array, data.total_size);
+            updateArrayList();
+        });
+
+        socket.on('error', (data) => {
+            document.getElementById('errorDisplay').textContent = data.message;
+        });
+
+        function generateArray() {
+            const size = Math.max(document.getElementById('size').value, 10000);
+            const min = parseInt(document.getElementById('min').value);
+            const max = parseInt(document.getElementById('max').value);
+            socket.emit('generate_array', {size: size, min: min, max: max});
+        }
+
+        function displayArray(array, totalSize) {
+            document.getElementById('arrayDisplay').innerHTML = array.join(', ') + (totalSize > 100 ? '...' : '');
+            document.getElementById('arrayInfo').textContent = `Showing ${array.length} out of ${totalSize} elements`;
+            document.getElementById('errorDisplay').textContent = '';
+        }
+
+        function updateArrayList() {
+            fetch('/get_arrays')
+                .then(response => response.json())
+                .then(arrays => {
+                    const select = document.getElementById('arraySelect');
+                    select.innerHTML = '<option value="">Select an array</option>';
+                    arrays.forEach(arrayId => {
+                        const option = document.createElement('option');
+                        option.value = arrayId;
+                        option.textContent = `Array ${arrayId}`;
+                        select.appendChild(option);
+                    });
+                })
+                .catch(error => document.getElementById('errorDisplay').textContent = 'Error fetching array list: ' + error.message);
+        }
+
+        function loadArray() {
+            const arrayId = document.getElementById('arraySelect').value;
+            if (arrayId) {
+                fetch(`/get_array/${arrayId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            document.getElementById('errorDisplay').textContent = data.error;
+                        } else {
+                            displayArray(data.array, data.total_size);
+                        }
+                    })
+                    .catch(error => document.getElementById('errorDisplay').textContent = 'Error loading array: ' + error.message);
+            }
+        }
+
+        updateArrayList();
+    </script>
+</body>
+</html>
