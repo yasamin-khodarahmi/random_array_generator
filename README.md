@@ -29,26 +29,31 @@ Before you begin, ensure you have met the following requirements:
 ## Installation
 
 1. Clone the repository:
+```bash
 git clone https://github.com/yasamin-khodarahmi/random_array_generator.git
 cd real-time-random-array-generator
-
-2. Create a virtual environment (optional but recommended):
+```
+3. Create a virtual environment (optional but recommended):
+```bash
 python -m venv venv
 source venv/bin/activate # On Windows, use venv\Scripts\activate
+```
 
 3. Install the required packages:
+```bash
 pip install -r requirements.txt
-
-4. Make sure MongoDB is running on your system.
+```
+5. Make sure MongoDB is running on your system.
 
 ## Usage
 
 1. Start the Flask application:
+```bash
 python app.py
+```
+3. Open a web browser and navigate to `http://localhost:5000`.
 
-2. Open a web browser and navigate to `http://localhost:5000`.
-
-3. Use the interface to generate random arrays:
+4. Use the interface to generate random arrays:
 - Specify the array size (minimum 10,000)
 - Set the minimum and maximum values for the random numbers
 - Click "Generate Array" to create and display a new array
