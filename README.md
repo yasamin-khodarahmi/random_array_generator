@@ -31,7 +31,7 @@ Before you begin, ensure you have met the following requirements:
 1. Clone the repository:
 ```bash
 git clone https://github.com/yasamin-khodarahmi/random_array_generator.git
-cd real-time-random-array-generator
+cd random_array_generator
 ```
 3. Create a virtual environment (optional but recommended):
 ```bash
@@ -62,7 +62,7 @@ python app.py
 
 ## Project Structure
 ```
-real-time-random-array-generator/
+random_array_generator/
 │
 ├── app.py # Main Flask application
 ├── templates/
